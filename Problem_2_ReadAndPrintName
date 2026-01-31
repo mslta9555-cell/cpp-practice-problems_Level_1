@@ -1,0 +1,79 @@
+#include <iostream>
+#include <string>
+#include <cctype> 
+#include <limits> 
+#include <ios>   
+
+void clearInputLine()
+{
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+bool isValidName(const std::string& name)
+{
+    if (name.empty()) return false;
+
+    for (char c : name)
+    {
+        if (!std::isalpha(static_cast<unsigned char>(c)) && c != ' ')
+            return false;
+    }
+    return true;
+}
+
+std::string ReadName()
+{
+    std::string name;
+
+    while (true)
+    {
+        std::cout << "Please enter your full name: ";
+        std::getline(std::cin, name);
+
+        if (!isValidName(name))
+        {
+            std::cout << "❌ Invalid name! Letters and spaces only.\n";
+            continue;
+        }
+
+        return name;
+    }
+}
+
+void PrintName(const std::string& name)
+{
+    std::cout << "Your name is : " << name << std::endl;
+}
+
+bool DoYouWantToRepeat()
+{
+    char answer;
+    do
+    {
+        std::cout << "\n🔁 Do you want to repeat the program? (y/n): ";
+        std::cin >> answer;
+        clearInputLine();
+
+        answer = static_cast<char>(std::tolower(static_cast<unsigned char>(answer)));
+        if (answer == 'y') return true;
+        if (answer == 'n') return false;
+        std::cout << "❌ Invalid input! Please enter y or n.\n";
+    } while (true);
+}
+
+void RunProgram()
+{
+    do
+    {
+        PrintName(ReadName());
+    } while (DoYouWantToRepeat());
+}
+
+int main()
+{
+    
+    RunProgram();
+    std::cout << "\nThanks for using this program\n";
+    return 0;
+}
