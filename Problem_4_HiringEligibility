@@ -1,0 +1,154 @@
+// Problem_4
+// --------------------------------------------
+// This program checks whether a person can be hired
+// based on age and possession of a driver's license.
+// --------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <cctype> 
+#include <limits> 
+#include <ios>  
+
+// Constants for age limits
+constexpr int MIN_AGE = 1;
+constexpr int MAX_AGE = 100;
+constexpr int HIRE_AGE = 21;
+
+// Clears the input buffer to avoid invalid input issues
+void clearInputLine()
+{
+	std::cin.clear();
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+// Structure to store person's information
+struct PersonInfo
+{
+    int age{};
+    bool hasDriverLicense{};
+};
+
+// Checks if the entered age is within the valid range
+bool isValidAge(int age)
+{
+    return age >= MIN_AGE && age <= MAX_AGE;
+}
+
+// Determines whether the person can be hired
+bool canBeHired(const PersonInfo& person)
+{
+    return person.age >= HIRE_AGE && person.hasDriverLicense;
+}
+
+// Reads and validates the person's age
+int readAge()
+{
+    int age;
+
+    while (true)
+    {
+        std::cout << "Enter age (" << MIN_AGE << "-" << MAX_AGE << "): ";
+        std::cin >> age;
+
+        if (std::cin.fail())
+        {
+            std::cout << "❌ Please enter a valid number.\n";
+            clearInputLine();
+            continue;
+        }
+
+        if (!isValidAge(age))
+        {
+            std::cout << "❌ Age must be between "
+                      << MIN_AGE << " and " << MAX_AGE << ".\n";
+            clearInputLine();
+            continue;
+        }
+
+        clearInputLine();
+        return age;
+    }
+}
+
+// Reads whether the person has a driver's license
+bool readHasDriverLicense()
+{
+    int input;
+
+    while (true)
+    {
+        std::cout << "Do you have a driver's license? (1 = Yes, 0 = No): ";
+        std::cin >> input;
+
+        if (std::cin.fail() || (input != 0 && input != 1))
+        {
+            std::cout << "❌ Please enter 1 or 0.\n";
+            clearInputLine();
+            continue;
+        }
+
+        clearInputLine();
+        return input == 1;
+    }
+}
+
+// Reads all required person information
+PersonInfo readPersonInfo()
+{
+    PersonInfo person;
+    person.age = readAge();
+    person.hasDriverLicense = readHasDriverLicense();
+    return person;
+}
+
+// Prints the hiring decision
+void printDecision(const PersonInfo& person)
+{
+    std::cout << "\n--- HIRE DECISION ---\n";
+    std::cout << "Age: " << person.age << '\n';
+    std::cout << "License: "
+              << (person.hasDriverLicense ? "Yes" : "No") << '\n';
+
+    std::cout << "Result: "
+              << (canBeHired(person) ? "✅ HIRED" : "❌ REJECTED")
+              << "\n";
+}
+
+// Asks the user if they want to repeat the program
+bool doYouWantToRepeat()
+{
+	char answer;
+
+	do
+	{
+		std::cout << "\n🔁 Do you want to repeat the program? (y/n): ";
+		std::cin >> answer;
+		clearInputLine();
+
+		answer = static_cast<char>(std::tolower(static_cast<unsigned char>(answer)));
+		if (answer == 'y') return true;
+		if (answer == 'n') return false;
+
+		std::cout << "❌ Invalid input! Please enter y or n.\n";
+	} while (true);
+}
+
+// Controls the program flow
+void runProgram()
+{
+    do
+    {
+        PersonInfo person = readPersonInfo();
+        printDecision(person);
+    }
+    while (doYouWantToRepeat());
+}
+
+// Program entry point
+int main()
+{
+	runProgram();
+	std::cout << "\nThanks for using this program\n";
+	return 0;
+}
