@@ -1,0 +1,131 @@
+// Problem_7
+#include <iostream>
+#include <ios>
+#include <limits>
+#include <cctype>
+
+constexpr int MIN_NUMBER = 0;
+constexpr int MAX_NUMBER = 100;
+constexpr int PASS_MARK = 50;
+// ------------------------------------------------------------
+// Helper: clear and discard rest of the line
+// ------------------------------------------------------------
+void clearInputLine()
+{
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+// ------------------------------------------------------------
+// ✅ Reads a positive number safely from the user.
+// Keeps asking until valid input is entered.
+// ------------------------------------------------------------
+float readMarkInRange()
+{
+    float number;
+
+    do
+    {
+        std::cout << "\nPlease enter a number : ";
+        std::cin >> number;
+
+        // Check for invalid (non-numeric) input
+        if (std::cin.fail())
+        {
+            std::cout << "❌ Invalid Input! Please enter a number.\n";
+            clearInputLine();
+            continue;
+        }
+        // Check for non-positive input
+        else if (number <= MIN_NUMBER || number > MAX_NUMBER)
+        {
+            std::cout << "❌ Invalid input! The mark must be between 0 and 100.\n";
+            clearInputLine();
+            continue;
+        }
+        else
+        {
+            // Valid number
+            clearInputLine();
+            return number;
+        }
+    } while (true);
+}
+
+// ------------------------------------------------------------
+// 🧾 Function: IsPass
+// 🔸 Purpose: Determines whether a mark is a passing grade.
+// ------------------------------------------------------------
+bool isPass(float mark)
+{
+    return mark >= PASS_MARK;
+}
+
+// ------------------------------------------------------------
+// 🖨️ Function: PrintResult
+// 🔸 Purpose: Displays the student's mark and pass/fail status.
+// ------------------------------------------------------------
+void printResult(float mark)
+{
+    std::cout << "\n--- Evaluation Result ---" << std::endl;
+    std::cout << "Mark Entered: " << mark << std::endl;
+    std::cout << "Status: ";
+
+    if (isPass(mark))
+    {
+        std::cout << "✅ PASS";
+    }
+    else
+    {
+        std::cout << "❌ FAIL";
+    }
+    std::cout << std::endl;
+}
+
+// ------------------------------------------------------------
+// ✅ Asks the user if they want to repeat the program.
+// ------------------------------------------------------------
+bool doYouWantToRepeat()
+{
+    char answer;
+
+    do
+    {
+        std::cout << "\n🔁 Do you want to repeat the program? (y/n): ";
+        std::cin >> answer;
+        clearInputLine();
+
+       answer = static_cast<char>(std::tolower(static_cast<unsigned char>(answer)));
+
+        if (answer == 'y') return true;
+        if (answer == 'n') return false;
+
+        std::cout << "❌ Invalid input! Please enter y or n.\n";
+
+    } while (true);
+}
+
+// ------------------------------------------------------------
+// 🚀 Function: RunProgram
+// 🔸 Purpose: Main execution loop for reading and evaluating marks.
+// ------------------------------------------------------------
+void runProgram()
+{
+    do
+    {
+        std::cout << "\n=====================================\n";
+        float Mark = readMarkInRange();
+        printResult(Mark);
+        std::cout << "\n=====================================\n";
+    } while (doYouWantToRepeat()); // Step 4: Ask to repeat
+}
+
+// ------------------------------------------------------------
+// ✅ Entry point of the program
+// ------------------------------------------------------------
+int main()
+{
+    runProgram();
+    std::cout << "\nThanks for using this program\n";
+    return 0;
+}
